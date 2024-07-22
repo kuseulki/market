@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+
+    <style>
+        .fieldError { color: #bd2130; border-color: #dc3545;}
+    </style>
+
+    <div class="container">
+
+        <div class="py-5 text-center">
+            <h2>상품 등록</h2>
+        </div>
+
+        <form th:action th:object="${itemRequest}" method="post" enctype="multipart/form-data">
+
+            <div class="row">
+                <div class="mb-3">
+                    <label for="itemName" class="form-label">상품명</label>
+                    <input type="text" class="form-control" id="itemName" name="itemName">
+                    <p th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}" class="fieldError">Incorrect data</p>
+
+                </div>
+                <div class="mb-3">
+                    <label for="price" class="form-label">가격</label>
+                    <input type="text" class="form-control" id="price" name="price">
+                    <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="fieldError">Incorrect data</p>
+
+                </div>
+                <div class="mb-3">
+                    <label for="stockNumber" class="form-label">재고 수량</label>
+                    <input type="text" class="form-control" id="stockNumber" name="stockNumber">
+                    <p th:if="${#fields.hasErrors('stockNumber')}" th:errors="*{stockNumber}" class="fieldError">Incorrect data</p>
+
+                </div>
+                <div class="mb-3">
+                    <label for="itemDetail" class="form-label">상품 상세 설명</label>
+                    <textarea class="form-control" id="itemDetail" name="itemDetail" rows="5"></textarea>
+                    <p th:if="${#fields.hasErrors('itemDetail')}" th:errors="*{itemDetail}" class="fieldError">Incorrect data</p>
+
+                </div>
+                <div class="mb-3">
+                    <label for="hashtag" class="form-label">해시태그</label>
+                    <input type="text" class="form-control" id="hashtag" name="hashtag">
+                </div>
+                <div class="row mb-4 justify-content-md-center">
+                    <label for="itemimages" class="form-label"></label>
+                    <input class="form-control" type="file" id="itemimages" name="itemimages" multiple>
+                </div>
+            </div>
+
+            <div class="text-end">
+                <button type="submit" class="btn btn-outline-primary">작성</button>
+            </div>
+
+        </form>
+
+    </div>
+
+
+
+    <!--            <ul>-->
+    <!--                <li>상품명 <input type="text" name="itemName"></li>-->
+    <!--                <li>내용 <textarea name="text"></textarea><br></li>-->
+    <!--                <li>이미지 파일들<input type="file" multiple="multiple" name="imageFiles" ></li>-->
+    <!--            </ul>-->
+    <!--            <input type="submit"/>-->
+
+
+
+
+</div>
+
+</html>

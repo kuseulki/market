@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+
+    <div class="container">
+        <div class="text-center mb-3">
+            <br/>
+            <!--            <h3 th:text="|${#authentication.principal.getUserName()}  님의 작성글 입니다.|"></h3>-->
+            <br/>
+        </div>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">번호</th>
+                <th scope="col">제목</th>
+                <th scope="col">작성자</th>
+                <th scope="col">작성일</th>
+                <th scope="col">조회</th>
+                <th scope="col">삭제</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="article : ${articles}">
+                <td th:text="${article.id}"></td>
+                <td><a th:href="@{'/articles/' + ${article.id}}" th:text="${article.title}"></a></td>
+                <td th:text="${article.userAccountDto.userName()}"></td>
+                <td class="created-at"><time th:datetime="${article.createdAt}" th:text="${#temporals.format(article.createdAt, 'yyyy-MM-dd')}">2022-01-01</time>
+                </td>
+<!--                <td>1</td>-->
+                <td>
+                    <form id="delete-article-form" th:action="@{/articles/{id}/delete(id=${article.id})}" method="post">
+                        <div class="pb-5 d-grid gap-2 d-md-block">
+                            <button class="btn btn-danger me-md-2" type="submit">삭제</button>
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+</html>

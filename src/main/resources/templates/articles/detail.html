@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+
+    <main id="article-main" class="container" th:object="${article}">
+        <header id="article-header" class="py-5 text-center">
+            <h1 th:text="*{title}">첫번째 글</h1>
+        </header>
+
+        <div class="row g-5">
+            <section class="col-md-3 col-lg-4 order-md-last">
+                <aside>
+                    <p><span id="nickname" th:text="*{userName}" >Uno</span></p>
+                    <p><a id="email" th:text="*{email}" >uno@mail.com</a></p>
+                    <p><time id="created-at" th:datetime="*{createdAt}" th:text="*{#temporals.format(createdAt, 'yyyy-MM-dd')}" >2024-06-01</time></p>
+                    <p><span id="hashtag" th:text="*{hashtag}">#java</span></p>
+                </aside>
+            </section>
+
+            <article id="article-content" class="col-md-9 col-lg-8">
+                <pre th:text="*{content}">본문</pre>
+
+                <div>
+                    <div th:each="fileDto: ${article.articleFileDtos}">
+                        <img th:src="@{|/upload/${fileDto.storedFileName}|}" alt="">
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="row g-5" id="article-buttons"  th:if="${#authorization.expression('isAuthenticated()')} and *{userId} == ${#authentication.name}">
+            <form id="delete-article-form" th:action="'/articles/' + *{id} + '/delete'" th:method="post">
+                <div class="pb-5 d-grid gap-2 d-md-block">
+                    <a class="btn btn-success me-md-2" role="button" id="update-article" th:href="'/articles/' + *{id} + '/form'">수정</a>
+                    <button class="btn btn-danger me-md-2" type="submit">삭제</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="row g-5">
+            <section>
+                <form class="row g-3" id="comment-form" th:action="@{/comments/new}" th:method="post">
+                    <input type="hidden" class="article-id" th:name="articleId" th:value="*{id}">
+                    <div class="col-md-9 col-lg-8">
+                        <label for="comment-textbox" hidden>댓글</label>
+                        <textarea class="form-control" id="comment-textbox" th:name="content" placeholder="댓글 쓰기.." rows="3" required></textarea>
+                    </div>
+                    <div class="col-md-3 col-lg-4">
+                        <label for="comment-submit" hidden>댓글 쓰기</label>
+                        <button class="btn btn-primary" id="comment-submit" type="submit">쓰기</button>
+                    </div>
+                </form>
+
+                <ul id="article-comments" class="row col-md-10 col-lg-8 pt-3">
+                    <li th:each="articleComment : ${articleComments}">
+                        <form class="comment-form" th:action="'/comments/' + ${articleComment.id} + '/delete'" th:method="post">
+                            <input type="hidden" th:name="articleId" th:value="${article.id}">
+                            <div class="row">
+                                <div class="col-md-10 col-lg-9">
+                                    <strong th:text="${articleComment.userName}">Uno</strong>
+                                    <small><time th:datetime="${articleComment.createdAt}" th:text="${#temporals.format(articleComment.createdAt, 'yyyy-MM-dd')}">2022-01-01</time></small>
+                                    <p th:text="${articleComment.content}">Lorem ipsum dolor sit amet</p>
+                                </div>
+                                <div class="col-2 mb-3 align-self-center">
+                                    <button type="submit" class="btn btn-outline-danger" id="delete-comment-button"
+                                            th:if="${#authorization.expression('isAuthenticated()')} and ${articleComment.userId} == ${#authentication.name}">삭제</button>
+                                </div>
+                            </div>
+                        </form>
+                    </li>
+                </ul>
+            </section>
+        </div>
+
+        <div class="row g-5">
+            <nav id="pagination" aria-label="Page navigation">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Previous"
+                           th:href="*{id} - 1 <= 0 ? '#' : |/articles/*{id - 1}|"
+                           th:class="'page-link' + (*{id} - 1 <= 0 ? ' disabled' : '')"
+                        >
+                            <span aria-hidden="true">&laquo; prev</span>
+                        </a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#" aria-label="Next"
+                           th:href="*{id} + 1 > ${totalCount} ? '#' : |/articles/*{id + 1}|"
+                           th:class="'page-link' + (*{id} + 1 > ${totalCount} ? ' disabled' : '')"
+                        >
+                            <span aria-hidden="true">next &raquo;</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </main>
+
+
+</div>
+</html>

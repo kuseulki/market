@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security" layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+
+            function addCart() {
+                var url = "/cart";
+                var paramData = {
+                    itemId: $("#itemId").val(),
+                    count: $("#stockNumber").val()
+                };
+
+                var param = JSON.stringify(paramData);
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: param,
+                    dataType: "json",
+                    cache: false,
+                    success: function (result, status) {
+                        alert("상품을 장바구니에 담았습니다.");
+                        location.href = '/';
+                    },
+                    error: function (jqXHR, status, error) {
+
+                        if (jqXHR.status == '401') {
+                            alert('로그인 후 이용해주세요');
+                            location.href = '/login';
+                        } else {
+                            alert(jqXHR.responseText);
+                        }
+                    }
+                });
+            }
+
+            function wish(){
+                var url = "/wishlist";
+                var paramData = {
+                    itemId : $("#itemId").val(),
+                    count : $("#stockNumber").val()
+                };
+
+                var param = JSON.stringify(paramData);
+
+                $.ajax({
+                    url      : url,
+                    type     : "POST",
+                    contentType : "application/json",
+                    data     : param,
+                    dataType : "json",
+                    cache   : false,
+                    success: function (result, status) {
+                        alert("찜하기");
+                        location.href = '/';
+                    },
+                    error : function(jqXHR, status, error){
+                        if(jqXHR.status == '401'){
+                            alert('로그인 후 이용해주세요');
+                            location.href='/login';
+                        } else{
+                            alert(jqXHR.responseText);
+                        }
+                    }
+                });
+            }
+
+
+        </script>
+    </th:block>
+
+    <th:block layout:fragment="css">
+        <style>
+            .mgb-15{ margin-bottom:15px; }
+            .mgt-50{ margin-top:50px; text-align: right;}
+            .repImgDiv{ width: 430px; height: 100%; }
+            .wd50{ height: auto; width: 50%; }
+            .d-1{ margin-top: 7%; font: 'Noto Sans'; }
+            .d-3 {
+                    color: #5F0080;
+                    height: 54px;
+                    background-color: #FFFFFF;
+                    border-color: #5F0080;
+                }
+        </style>
+    </th:block>
+
+    <div class="container">
+
+        <div class="d-1">
+            <input type="hidden" id="itemId" th:value="${item.id}">
+
+            <div class="d-flex">
+                <div class="text-center repImgDiv">
+                    <img th:src="@{|/upload/${item.itemImageDtos[0].storedFileName}|}" width="250">
+                </div>
+
+                <div class="wd50 px-5">
+                    <span class="badge badge-primary mgb-15">판매중</span>
+                    <!--                <span th:if="${item.itemSellStatus == T(com.example.project.enums.ItemSellStatus).SELL}" class="badge badge-primary mgb-15">판매중</span>-->
+                    <!--                <span th:unless="${item.itemSellStatus == T(com.example.project.enums.ItemSellStatus).SELL}" class="badge btn-danger mgb-15">품절</span>-->
+                    <span class="badge btn-danger mgb-15">품절</span>
+
+                    <div class="px-2 pb-2">
+                        <h2 class="fw-bolder" th:text="${item.itemName}">상품이름</h2>
+                        <h6 class="pt-2" th:text="${item.itemDetail}" style="color: #959393;">상품설명</h6>
+                        <div class="fw-bolder h3 pt-3 text-danger">
+                            <input type="hidden" th:value="${item.price}" id="price" name="price">
+                            <span th:text="${item.price}"></span>원
+                        </div>
+                    </div>
+
+                    <hr class="my-4">
+
+                    <div class="row mgt-50">
+                        <div class="col-6">
+                            <div class="input-group pt-2">
+                                <span class="input-group-text">수량</span>
+                                <input class="form-control" type="number" name="stockNumber" id="stockNumber" value="1" min="1">
+                            </div>
+                        </div>
+
+                        <div class="col-6">
+                            <div>
+                                <h5>총 상품 금액</h5>
+                                <h3 name="totalPrice" id="totalPrice" class="font-weight-bold text-danger"></h3>
+                                <br>
+                            </div>
+                        </div>
+                    </div>
+
+                    <form class="d-flex justify-content-end" sec:authorize="hasRole('ADMIN')">
+                        <div>
+                            <a th:action="'/item/' + ${item.id} + '/delete'">
+                                <button type="button" class="btn btn-outline-primary btn-lg d-3">상품수정</button>
+                            </a>
+                        </div>
+                        <div>
+                            <a th:href="'/item/' + ${item.id} + '/update'">
+                                <button type="button" class="btn btn-outline-primary btn-lg d-3">상품삭제</button>
+                            </a>
+                        </div>
+                    </form>
+
+
+<!--                    <div class="row g-5" id="article-buttons"-->
+<!--                         th:if="${#authorization.expression('isAuthenticated()')} and ${item.userId} == ${#authentication.name}">-->
+<!--                        <form id="delete-article-form" th:action="'/item/' + ${item.id} + '/delete'" th:method="post">-->
+<!--                            <div class="pb-5 d-grid gap-2 d-md-block">-->
+<!--                                <a class="btn btn-success me-md-2" role="button" id="update-article"-->
+<!--                                   th:href="'/item/' + ${item.id} + '/update'">수정</a>-->
+<!--                                <button class="btn btn-danger me-md-2" type="submit">삭제</button>-->
+<!--                            </div>-->
+<!--                        </form>-->
+<!--                    </div>-->
+
+                    <form class="d-flex justify-content-end">
+                        <!--                <form class="d-flex justify-content-end" sec:authorize="hasRole('SNS') or hasRole('USER')">-->
+                        <div>
+                            <button type="button" class="btn btn-light btn-primary btn-lg d-3" onclick="wish()">찜하기</button>
+                        </div>
+                        <div>
+                            <button type="button" class="btn btn-light btn-primary btn-lg d-3" onclick="addCart()">장바구니 담기</button>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+
+        <hr class="my-4">
+
+        <div th:each="itemImg, stat : ${item.itemImageDtos}" class="text-center">
+            <div th:if="${stat.index > 0}" class="text-left" width="800">
+                <img th:src="@{|/upload/${itemImg.storedFileName}|}" class="rounded mgb-15" width="800">
+            </div>
+        </div>
+    </div>
+
+</div>
+</div>
+</html>

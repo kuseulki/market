@@ -1,0 +1,146 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+
+<div layout:fragment="content">
+
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+            function cancelOrder(orderId) {
+                var url = "/order/" + orderId + "/cancel";
+                var paramData = {
+                    orderId: orderId
+                };
+
+                var param = JSON.stringify(paramData);
+
+                $.ajax({
+                    url: url,
+                    type: "POST",
+                    contentType: "application/json",
+                    data: param,
+                    dataType: "json",
+                    cache: false,
+                    success: function (result, status) {
+                        alert("주문이 취소 되었습니다.");
+                        location.href = '/orders/' + page; // page 변수를 사용하려면 페이지에서 정의되어 있어야 합니다.
+                    },
+                    error: function (jqXHR, status, error) {
+                        if (jqXHR.status == '401') {
+                            alert('로그인 후 이용해주세요');
+                            location.href = '/login';
+                        } else {
+                            alert(jqXHR.responseText);
+                        }
+                    }
+                });
+            }
+        </script>
+    </th:block>
+
+    <!-- 사용자 CSS 추가 -->
+    <th:block layout:fragment="css">
+        <style>
+            .container {
+                font: 'Noto Sans';
+            }
+
+            .content-mg {
+                margin-left: 30%;
+                margin-right: 30%;
+                margin-top: 2%;
+                margin-bottom: 100px;
+            }
+
+            .repImgDiv {
+                margin-right: 15px;
+                margin-left: 15px;
+                height: auto;
+            }
+
+            .repImg {
+                height: 100px;
+                width: 100px;
+            }
+
+            .card {
+                width: 750px;
+                height: 100%;
+                padding: 30px;
+                margin-bottom: 20px;
+            }
+
+            .fs18 {
+                font-size: 18px
+            }
+
+            .fs24 {
+                font-size: 24px
+            }
+
+            .a {
+                margin-right: 12px;
+            }
+
+            .b {
+                font: 'Noto Sans';
+            }
+        </style>
+    </th:block>
+
+    <div class="container">
+        <h2 class="mb-4 b">주문 내역</h2>
+
+
+        <div th:each="order : ${orders}">
+
+            <div class="d-flex mb-3 align-self-center">
+
+                <h4 th:text="${order.orderDate} + ' 주문'"></h4>
+            </div>
+
+            <div class="card d-flex">
+                <div th:each="orderItem : ${order.orderItemDtoList}" class="d-flex mb-3">
+                    <div class="repImgDiv">
+                        <img th:src="@{|/upload/${orderItem.savePath}|}" class="rounded repImg"
+                             th:alt="${orderItem.itemName}">
+                    </div>
+
+                    <div class="align-self-center w-75">
+                        <table style="background-color: transparent; border-collapse: collapse;">
+                            <tr>
+                                <td style="border: none;">
+                                    <span th:text="상품명" class="a fs18 font-weight-light"></span>
+                                </td>
+                                <td style="border: none;">
+                                    <!--                                    <span  class="fs18 font-weight-light">이미지</span>-->
+                                    <span th:text="${orderItem.itemName}" class="fs18 font-weight-light"></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td style="border: none;">
+                                    <span th:text="결제금액" class="a fs18 font-weight-light"></span>
+                                </td>
+                                <td style="border: none;">
+                                    <span th:text="${orderItem.orderPrice * orderItem.count + '원'}"
+                                          class="fs18 font-weight-light"></span>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+
+                <div style="margin-top: 20px">
+                    <a th:href="@{/payment/{orderId}(orderId=${order.orderId})}" class="btn btn-lg text-white"
+                       style="background-color: #5F0080;">결제 하기</a>
+                </div>
+
+
+            </div>
+
+
+        </div>
+    </div>
+</div>
+</html>

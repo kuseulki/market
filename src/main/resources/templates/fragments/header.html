@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<div th:fragment="header">
+
+    <style>
+        .nav { font-size: 17px; font-weight: bold; display: flex; justify-content: center; align-items: center; }
+    </style>
+
+    <div class="p-3 mb-3 border-bottom">
+        <div class="container">
+            <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start text-center">
+                <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none"></a>
+
+                <div>
+                    <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-md-0">
+                        <a class="nav-link dropdown-toggle btn-2" data-toggle="dropdown" style="margin-right: 50px;">카테고리</a>
+                        <div class="dropdown-menu btn-2">
+                            <a class="nav-link dropdown-item btn-2" href="/category/fruit">과일</a>
+                            <a class="nav-link dropdown-item btn-2" href="/category/meat">정육ㆍ계란</a>
+                            <a class="nav-link dropdown-item btn-2" href="/category/bakery">베이커리ㆍ치즈ㆍ델리</a>
+                            <a class="nav-link dropdown-item btn-2" href="/category/hair">헤어ㆍ바디ㆍ구강</a>
+                            <a class="nav-link dropdown-item btn-2" href="/category/kitchenutensils">주방용품</a>
+                            <a class="nav-link dropdown-item btn-2" href="/category/homeappliances">가전제품</a>
+                        </div>
+
+                        <li><a th:href="@{/}" class="nav-link link-dark" style="margin-right: 60px;">전체상품</a></li>
+                        <li><a th:href="@{/articles}" class="nav-link link-dark" style="margin-right: 60px;">게시판</a></li>
+                        <li><a th:href="@{/item}" class="nav-link link-dark" style="margin-right: 60px;">베스트</a></li>
+                        <li><a th:href="@{/admin/page}" class="nav-link link-dark" style="margin-right: 60px;">특가/혜택</a></li>
+                        <li><a th:href="@{/articles}" class="nav-link link-dark" style="margin-right: 110px;">게시판</a></li>
+                    </ul>
+                </div>
+
+                <form class="text-end col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
+                    <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+
+
+    <div class="container">
+        <header id="article-form-header" class="py-5 text-center">
+            <h1 th:text="${formStatus} ? '게시글 ' + ${formStatus.description} : _">게시글 작성</h1>
+        </header>
+
+        <form id="article-form" th:action="${formStatus?.update} ? '/articles/' + ${article.id} + '/form' : '/articles/form'" th:method="post" enctype="multipart/form-data">
+            <div class="row mb-3 justify-content-md-center">
+                <label for="title" class="col-sm-2 col-lg-1 col-form-label text-sm-end">제목</label>
+                <div class="col-sm-8 col-lg-9">
+                    <input type="text" class="form-control" id="title" name="title" th:value="${article?.title} ?: _" required>
+                </div>
+            </div>
+            <div class="row mb-3 justify-content-md-center">
+                <label for="content" class="col-sm-2 col-lg-1 col-form-label text-sm-end">본문</label>
+                <div class="col-sm-8 col-lg-9">
+                    <textarea class="form-control" id="content" name="content" th:text="${article?.content} ?: _" rows="5" required></textarea>
+                </div>
+            </div>
+            <div class="row mb-4 justify-content-md-center">
+                <label for="hashtag" class="col-sm-2 col-lg-1 col-form-label text-sm-end">해시태그</label>
+                <div class="col-sm-8 col-lg-9">
+                    <input type="text" class="form-control" id="hashtag" name="hashtag" th:value="${article?.hashtag} ?: _">
+                </div>
+            </div>
+            <div class="row mb-4 justify-content-md-center">
+                <label for="imageFiles" class="form-label"></label>
+                <input class="form-control" type="file" id="imageFiles" name="imageFiles" width="250" multiple>
+            </div>
+            <div class="row mb-5 justify-content-md-center">
+                <div class="col-sm-10 d-grid gap-2 d-sm-flex justify-content-sm-end">
+                    <button type="submit" class="btn btn-primary" id="submit-button" th:text="${formStatus?.description} ?: _">저장</button>
+                    <button type="button" class="btn btn-secondary" id="cancel-button" th:onclick="'history.back()'">취소</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+</html>

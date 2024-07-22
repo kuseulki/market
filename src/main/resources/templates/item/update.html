@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+
+    <style>
+        .fieldError { color: #bd2130; border-color: #dc3545;}
+    </style>
+
+    <div class="container">
+        <div class="alert alert-light" role="alert">상품수정</div>
+
+        <div class="px-4 px-lg-5 my-5">
+            <form th:action="@{|/item/${item.id}/update|}" th:object="${itemRequest}" method="post" enctype="multipart/form-data">
+
+                    <input type="hidden" th:value="${item.id}">
+
+                    <div class="col-12">
+                        <label for="itemName" class="form-label">상품명</label>
+                        <input type="text" class="form-control" id="itemName" name="itemName" th:value="${item.itemName}">
+<!--                        <p th:if="${#fields.hasErrors('itemName')}" th:errors="*{itemName}" class="fieldError">Incorrect data</p>-->
+
+                    </div>
+                    <div class="col-12">
+                        <label for="price" class="form-label">가격</label>
+                        <input type="text" class="form-control" id="price" name="price" th:value="${item.price}">
+<!--                        <p th:if="${#fields.hasErrors('price')}" th:errors="*{price}" class="fieldError">Incorrect data</p>-->
+
+                    </div>
+                    <div class="col-12">
+                        <label for="stockNumber" class="form-label">재고 수량</label>
+                        <input type="text" class="form-control" id="stockNumber" name="stockNumber" th:value="${item.stockNumber}">
+<!--                        <p th:if="${#fields.hasErrors('stockNumber')}" th:errors="*{stockNumber}" class="fieldError">Incorrect data</p>-->
+                    </div>
+                    <div class="col-12">
+                        <label for="itemDetail" class="form-label">상품 설명</label>
+                        <input type="text" class="form-control" name="itemDetail" id="itemDetail" th:value="${item.itemDetail}">
+<!--                        <p th:if="${#fields.hasErrors('itemDetail')}" th:errors="*{itemDetail}" class="fieldError">Incorrect data</p>-->
+                    </div>
+                <div class="mb-3">
+                    <label for="hashtag" class="form-label">해시태그</label>
+                    <input type="text" class="form-control" id="hashtag" name="hashtag">
+                </div>
+                    <div class="row mb-4 justify-content-md-center">
+                        <label for="itemimages" class="form-label"></label>
+                        <input class="form-control" type="file" id="itemimages" name="itemimages" multiple>
+                    </div>
+
+                    <button class="btn btn-lg text-white" style="background-color: #5F0080;" type="submit">상품 수정</button>
+            </form>
+        </div>
+
+        </div>
+    </div>
+
+</div>
+</html>

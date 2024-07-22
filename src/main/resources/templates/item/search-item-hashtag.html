@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/layout}">
+
+<div layout:fragment="content">
+
+
+    <main class="container" th:object="${item}">
+        <header class="py-5 text-center">
+            <h1>Hashtags</h1>
+        </header>
+
+        <section class="row">
+            <div id="hashtags" class="col-9 d-flex flex-wrap justify-content-evenly">
+                <div class="p-2" th:each="hashtag : ${hashtags}">
+                    <h2 class="text-center lh-lg font-monospace"><a href="#" th:class="'text-reset'" th:text="${hashtag}" th:href="@{/item/search-hashtag(page=${param.page}, sort=${param.sort}, searchType=${searchType.name}, searchValue=${hashtag})}">#java</a></h2>
+                </div>
+            </div>
+        </section>
+
+        <hr>
+
+        <table class="table" id="article-table">
+            <thead>
+            <tr>
+                <th class="title col-6"><a th:text="'상품이름'" th:href="@{/item/search-hashtag(page=${item.number}, sort='itemName' + (*{sort.getOrderFor('itemName')} != null ? (*{sort.getOrderFor('itemName').direction.name} != 'DESC' ? ',desc' : '') : ''), searchType=${searchType.name}, searchValue=${param.searchValue})}">상품이름</a></th>
+<!--                <td class="itemName" th:text="${item.itemName}">상품이름</td>-->
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="item : ${item}">
+                <td class="itemName"><a th:text="${item.itemName}" th:href="@{'/item/' + ${item.id}}">첫글</a></td>
+            </tr>
+            </tbody>
+        </table>
+
+        <nav id="pagination" aria-label="Page navigation">
+            <ul class="pagination justify-content-center">
+                <li class="page-item"><a class="page-link" th:text="'previous'" th:href="@{/item(page=${item.number - 1}, searchType=${searchType.name}, searchValue=${param.searchValue})}" th:class="'page-link' + (${item.number} <= 0 ? ' disabled' : '')">Previous</a></li>
+                <li class="page-item" th:each="pageNumber : ${paginationBarNumbers}">
+                    <a class="page-link" th:text="${pageNumber + 1}" th:href="@{/item(page=${pageNumber}, searchType=${searchType.name}, searchValue=${param.searchValue})}" th:class="'page-link' + (${pageNumber} == ${item.number} ? ' disabled' : '')">1</a>
+                </li>
+                <li class="page-item"><a class="page-link" th:text="'next'" th:href="@{/item(page=${item.number + 1}, searchType=${searchType.name}, searchValue=${param.searchValue})}" th:class="'page-link' + (${item.number} >= ${item.totalPages - 1} ? ' disabled' : '')">Next</a></li>
+            </ul>
+        </nav>
+
+    </main>
+
+</div>
+</html>
